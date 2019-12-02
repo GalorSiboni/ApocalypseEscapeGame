@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         rand = new Random();
         timer = new Timer();
+
         
         //Car movement
         timer.schedule(new TimerTask() {
