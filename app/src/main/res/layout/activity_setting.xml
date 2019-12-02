@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Setting"
+    android:background="@drawable/setting"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="80dp"
+        android:textColor="@android:color/black"
+        android:text="Setting"
+        android:textStyle="bold"
+        android:textSize="68dp"
+        android:layout_gravity="center"/>
+
+    <CheckBox
+        android:id="@+id/Sound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sound"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"/>
+    <CheckBox
+        android:id="@+id/Speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Speed"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"/>
+    <CheckBox
+        android:id="@+id/Lanes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="More Lanes"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"/>
+    <CheckBox
+        android:id="@+id/Sensor"
+        android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        android:layout_height="wrap_content"
+        android:text="Sensor"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"/>
+    <Button
+        android:id="@+id/backMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:background="@android:color/holo_green_light"
+        android:textSize="30sp"
+        android:text="Back" />
+
+</LinearLayout>
