@@ -16,7 +16,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Random rand;
-    int laneOptions[] = {0, 550, 1100};
+    int laneOptions[] = {0, 550, 1150};
 
 
 
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rand = new Random();
         timer = new Timer();
 
-        
+
         //Car movement
         timer.schedule(new TimerTask() {
             @Override
@@ -117,9 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public boolean hitCheck(float x, float y){
-        if (carX == x && Car.getY() == y)
-            return true;
-        return false;
+        return carX == x && Car.getY() + 45 <= y;
     }
 
     public void changePos() {
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(carX < 0){
             carX = 0;
         }
-        if(carX > 1000){
+        if(carX > 600){
             carX = 1150;
         }
         Car.setX(carX);
@@ -176,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (hitCheck(zombieX, zombieY) && zombieX != zombie2X){
             lifeNum--;
+            Zombie.setY(0);
             updateLife(lifeNum);
         }
     }
@@ -192,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(hitCheck(zombie2X, zombie2Y)) {
             lifeNum--;
+            Zombie.setY(0);
             updateLife(lifeNum);
         }
     }
