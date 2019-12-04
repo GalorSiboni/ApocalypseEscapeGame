@@ -20,20 +20,26 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), TopRanking.class);
-                view.getContext().startActivity(intent);}
+                view.getContext().startActivity(intent);
+                finish();
+            }
         });
 
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), Setting.class);
-                view.getContext().startActivity(intent);}
+                view.getContext().startActivity(intent);
+                finish();
+            }
         });
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), MainActivity.class);
-                view.getContext().startActivity(intent);}
+                view.getContext().startActivity(intent);
+                finish();
+            }
         });
     }
 }

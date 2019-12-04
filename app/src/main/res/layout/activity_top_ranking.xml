@@ -25,7 +25,7 @@
         android:id="@+id/FirstPlace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1st Place: 0"
+        android:text="1st Place: "
         android:textColor="@android:color/black"
         android:textSize="30sp"
         android:layout_gravity="center"

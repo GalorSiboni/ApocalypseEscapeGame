@@ -18,7 +18,9 @@ public class Setting extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), MainMenu.class);
-                view.getContext().startActivity(intent);}
+                view.getContext().startActivity(intent);
+                finish();
+            }
         });
     }
 }

@@ -2,10 +2,13 @@ package com.example.apocalypseescape;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,12 +20,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Random rand;
     int laneOptions[] = {0, 550, 1150};
-
-
+    Vibrator vibrator;
 
     //Image
     private ImageView Car, Zombie,Zombie2,life0,life1,life2;
-    private ImageButton Left, Right;
 
     //Position
     private float zombieX, zombieY, zombie2X, zombie2Y;
@@ -34,7 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Score and lifes
     private TextView scoreLable;
-    private int score,timeCount,speed,lifeNum;
+    private int timeCount,speed,lifeNum,score;
+
 
     //Status
     private boolean start_flg = false;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.Right).setOnClickListener(this);
 
         start_flg = true;
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         carX = Car.getX() + 550;
         zombieY = Zombie.getY();
         zombie2Y = Zombie2.getY();
@@ -67,8 +70,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lifeNum = 3;
         timeCount = 0;
         score = 0;
-        scoreLable.setText("Score : " + score);
+        Thread scoreCounter = new Thread(){
+            @Override
+            public void run(){
+                while(!isInterrupted()){
+                    try {
+                            Thread.sleep(1000); // 1000 ms == 1 sec = 1 point
 
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                score++;
+                                scoreLable.setText("Score : " + score);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        scoreCounter.start();
         rand = new Random();
         timer = new Timer();
 
@@ -151,15 +173,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 1:
                 life1.setVisibility(View.INVISIBLE);
                 break;
-            case  0:
+            case 0:
                 life2.setVisibility(View.INVISIBLE);
+                Zombie.setVisibility(View.INVISIBLE);
+                Zombie2.setVisibility(View.INVISIBLE);
                 gameOver();
+                timer.cancel();
+                finish();
                 break;
         }
     }
 
     private void gameOver() {
-
+        Intent scoreIntent = new Intent(MainActivity.this, GameOver.class);
+        String scoreStr = String.valueOf(score);
+        scoreIntent.putExtra("key", scoreStr);
+        startActivity(scoreIntent);
     }
 
     public void zombieDrops() {
@@ -169,11 +198,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             zombieY = 0;
             zombieX = laneOptions[rand.nextInt(laneOptions.length)];
         }
-        Zombie.setY(zombieY);
         Zombie.setX(zombieX);
+        Zombie.setY(zombieY);
 
         if (hitCheck(zombieX, zombieY) && zombieX != zombie2X){
             lifeNum--;
+
+            if (Build.VERSION.SDK_INT >= 26) {
+                vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                if (lifeNum == 0){
+                    vibrator.vibrate(VibrationEffect.createOneShot(600, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+            }else{
+                vibrator.vibrate(200);
+            }
             Zombie.setY(0);
             updateLife(lifeNum);
         }
@@ -191,6 +229,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(hitCheck(zombie2X, zombie2Y)) {
             lifeNum--;
+            if (Build.VERSION.SDK_INT >= 26) {
+                vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                if (lifeNum == 0){
+                    vibrator.vibrate(VibrationEffect.createOneShot(600, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+            }else{
+                vibrator.vibrate(200);
+            }
             Zombie.setY(0);
             updateLife(lifeNum);
         }
