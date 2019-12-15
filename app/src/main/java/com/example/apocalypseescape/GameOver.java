@@ -32,6 +32,7 @@ public class GameOver extends AppCompatActivity {
                     Intent storeScore = new Intent(GameOver.this, TopRanking.class);
 
                     lastScore = Integer.valueOf(score);
+                    score = "0";
                     SharedPreferences preferences = getSharedPreferences("Prefs", 0);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putInt("lastScore", lastScore);

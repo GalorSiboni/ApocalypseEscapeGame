@@ -12,31 +12,39 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tyrantgit.explosionfield.ExplosionField;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Random rand;
-    int laneOptions[] = {0, 550, 1150};
+    List<Integer> laneOptions = new ArrayList<>();
+
     Vibrator vibrator;
 
     //Image
-    private ImageView Car, Zombie,Zombie2,life0,life1,life2;
+    private ImageView Car, Zombie,Zombie2,Zombie3,Zombie4,Coin,life0,life1,life2;
 
     //Position
-    private float zombieX, zombieY, zombie2X, zombie2Y;
+    private float zombieY, coinY;
+    private int zombieX, zombie2X, zombie3X, zombie4X,  coinX, zombieAndCoinSpeed;
     private float carX;
 
     //Class
     private Handler handler = new Handler();
     private Timer timer;
 
-    //Score and lifes
-    private TextView scoreLable;
-    private int timeCount,speed,lifeNum,score;
+    //Score, Distance,Speed and Lifes
+    private TextView scoreLable, disLable;
+    private int lifeNum, score, distance = 0;
+    private String speed;
 
+    ExplosionField explosionField;
 
     //Status
     private boolean start_flg = false;
@@ -50,25 +58,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Car = findViewById(R.id.Car);
+        Coin = findViewById(R.id.Coin);
         Zombie = findViewById(R.id.Zombie);
         Zombie2 = findViewById(R.id.Zombie2);
+        Zombie3 = findViewById(R.id.Zombie3);
+        Zombie4 = findViewById(R.id.Zombie4);
         scoreLable = findViewById(R.id.scoreLabel);
+        disLable = findViewById(R.id.disLabel);
         life0 = findViewById(R.id.life0);
         life1 = findViewById(R.id.life1);
         life2 = findViewById(R.id.life2);
+        explosionField = ExplosionField.attach2Window(this);
         findViewById(R.id.Left).setOnClickListener(this);
         findViewById(R.id.Right).setOnClickListener(this);
 
         start_flg = true;
+        laneOptions.add(0);
+        laneOptions.add(290);
+        laneOptions.add(580);
+        laneOptions.add(870);
+        laneOptions.add(1160);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        carX = Car.getX() + 550;
+        carX =  laneOptions.get(2);
         zombieY = Zombie.getY();
-        zombie2Y = Zombie2.getY();
         Car.setX(carX);
 
 
+        String slowSpeed = "slow";
+        Intent speedIntent = getIntent();
+        speed = speedIntent.getStringExtra("speed");
+        if(speed != null && speed.equals(slowSpeed))
+            zombieAndCoinSpeed = 15;
+        else zombieAndCoinSpeed = 30;
+
         lifeNum = 3;
-        timeCount = 0;
         score = 0;
         Thread scoreCounter = new Thread(){
             @Override
@@ -81,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void run() {
                                 score++;
+                                distance += zombieAndCoinSpeed;
+                                disLable.setText("Distance : " + distance + " M");
                                 scoreLable.setText("Score : " + score);
                             }
                         });
@@ -120,37 +145,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             zombieDrops();
                         }
                     });
-            }
-        }, 1, 20);
 
-        //Zombie2 movement
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (start_flg)
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            zombie2Drops();
-                        }
-                    });
             }
         }, 1, 20);
     }
 
     public boolean hitCheck(float x, float y){
-        return carX == x && Car.getY() + 45 <= y;
+        return carX == x && Car.getY() + 20 <= y;
     }
 
     public void changePos() {
 
         //Move Car
         if (action_right_flg) {
-            carX += 550;
+            carX += 290;
             action_right_flg = false;
         }
         if (action_left_flg){
-            carX -= 600;
+            carX -= 290;
             action_left_flg = false;
         }
 
@@ -158,10 +170,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(carX < 0){
             carX = 0;
         }
-        if(carX > 600){
-            carX = 1150;
-        }
+
         Car.setX(carX);
+        if (carX > 1160) Car.setX(1160);
     }
 
     private void updateLife(int lifeNum) {
@@ -177,6 +188,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 life2.setVisibility(View.INVISIBLE);
                 Zombie.setVisibility(View.INVISIBLE);
                 Zombie2.setVisibility(View.INVISIBLE);
+                Zombie3.setVisibility(View.INVISIBLE);
+                Zombie4.setVisibility(View.INVISIBLE);
                 gameOver();
                 timer.cancel();
                 finish();
@@ -192,56 +205,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void zombieDrops() {
-        zombieY += 30;
-        //Check zombie position
-        if (zombieY > 2000) {
+        zombieY += zombieAndCoinSpeed;
+        if (zombieY > 2100) {
             zombieY = 0;
-            zombieX = laneOptions[rand.nextInt(laneOptions.length)];
+            zombieX = laneOptions.remove(rand.nextInt(laneOptions.size() - 1));
+            zombie2X = laneOptions.remove(rand.nextInt(laneOptions.size() - 1));
+            zombie3X = laneOptions.remove(rand.nextInt(laneOptions.size() - 1));
+            zombie4X = laneOptions.remove(rand.nextInt(laneOptions.size() - 1));
+            coinX = 30 + laneOptions.get(0);
+            laneOptions.add(zombieX);
+            laneOptions.add(zombie2X);
+            laneOptions.add(zombie3X);
+            laneOptions.add(zombie4X);
         }
-        Zombie.setX(zombieX);
-        Zombie.setY(zombieY);
+            Zombie.setX(zombieX);
+            Zombie.setY(zombieY);
+            Zombie2.setX(zombie2X);
+            Zombie2.setY(zombieY);
+            Zombie3.setX(zombie3X);
+            Zombie3.setY(zombieY);
+            Zombie4.setX(zombie4X);
+            Zombie4.setY(zombieY);
+            Coin.setX(coinX);
+            Coin.setY(100 + zombieY);
 
-        if (hitCheck(zombieX, zombieY) && zombieX != zombie2X){
+        if (hitCheck(zombieX, zombieY) || hitCheck(zombie2X, zombieY) || hitCheck(zombie3X, zombieY)|| hitCheck(zombie4X, zombieY)){
             lifeNum--;
-
-            if (Build.VERSION.SDK_INT >= 26) {
-                vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
-                if (lifeNum == 0){
-                    vibrator.vibrate(VibrationEffect.createOneShot(600, VibrationEffect.DEFAULT_AMPLITUDE));
-                }
-            }else{
-                vibrator.vibrate(200);
-            }
-            Zombie.setY(0);
+            vibe();
+           // explosionField.explode(Car);
+            Zombie.setY(-200);
+            Zombie2.setY(-200);
+            Zombie3.setY(-200);
+            Zombie4.setY(-200);
+            Coin.setY(-200);
             updateLife(lifeNum);
         }
-    }
-
-    public void zombie2Drops() {
-        zombie2Y += 30;
-         //Check zombie position
-        if(zombie2Y > 2000){
-            zombie2Y = 0;
-            zombie2X = laneOptions[rand.nextInt(laneOptions.length)];
-        }
-        Zombie2.setY(zombie2Y);
-        Zombie2.setX(zombie2X);
-
-        if(hitCheck(zombie2X, zombie2Y)) {
-            lifeNum--;
-            if (Build.VERSION.SDK_INT >= 26) {
-                vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
-                if (lifeNum == 0){
-                    vibrator.vibrate(VibrationEffect.createOneShot(600, VibrationEffect.DEFAULT_AMPLITUDE));
-                }
-            }else{
-                vibrator.vibrate(200);
+        if(carX == (coinX - 30) && Car.getY() - 80 <= zombieY){
+          //  explosionField.explode(Coin);
+            score += 5;
+            Zombie.setY(-200);
+            Zombie2.setY(-200);
+            Zombie3.setY(-200);
+            Zombie4.setY(-200);
+            Coin.setY(-200);
             }
-            Zombie.setY(0);
-            updateLife(lifeNum);
-        }
-    }
 
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -258,4 +267,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void vibe(){
+        if (Build.VERSION.SDK_INT >= 26) {
+            vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+            if (lifeNum == 0){
+                vibrator.vibrate(VibrationEffect.createOneShot(600, VibrationEffect.DEFAULT_AMPLITUDE));
+            }
+        }else{
+            vibrator.vibrate(200);
+        }
+    }
     }

@@ -43,7 +43,7 @@ public class TopRanking extends AppCompatActivity {
 
     }
     public void updateRanking(int newScore, SharedPreferences preferences){
-
+        SharedPreferences.Editor editor = preferences.edit();
         int temp2;
         if(firstPlace > newScore){
             if (secondPlace > newScore){
@@ -51,17 +51,14 @@ public class TopRanking extends AppCompatActivity {
                 else{
                     thirdPlace = newScore;
 
-                    SharedPreferences.Editor editor = preferences.edit();
                     editor.putInt("thirdPlace", thirdPlace);
                     editor.apply();
                 }
             }
             else{
-                temp2 = secondPlace;
+                thirdPlace = secondPlace;
                 secondPlace = newScore;
-                thirdPlace = temp2;
 
-                SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt("secondPlace", secondPlace);
                 editor.putInt("thirdPlace", thirdPlace);
                 editor.apply();
@@ -73,7 +70,6 @@ public class TopRanking extends AppCompatActivity {
             thirdPlace = secondPlace;
             secondPlace = temp2;
 
-            SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("firstPlace", firstPlace);
             editor.putInt("secondPlace", secondPlace);
             editor.putInt("thirdPlace", thirdPlace);

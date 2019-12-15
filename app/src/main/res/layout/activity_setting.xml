@@ -20,52 +20,46 @@
         android:textSize="68dp"
         android:layout_gravity="center"/>
 
-    <CheckBox
-        android:id="@+id/Sound"
+
+    <Button
+        android:id="@+id/Slow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sound"
+        android:text="Slow Speed"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:textSize="25dp"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"/>
-    <CheckBox
-        android:id="@+id/Speed"
+    <Button
+        android:id="@+id/Fast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Speed"
+        android:text="Fast speed"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:textSize="25dp"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"/>
-    <CheckBox
-        android:id="@+id/Lanes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="More Lanes"
-        android:textColor="@android:color/black"
-        android:textSize="25dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"/>
-    <CheckBox
+
+    <Button
         android:id="@+id/Sensor"
         android:layout_width="wrap_content"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:textSize="25dp"
         android:layout_height="wrap_content"
-        android:text="Sensor"
+        android:text="Sensor mode"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"/>
+
+
     <Button
         android:id="@+id/backMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:background="@android:color/holo_green_light"
         android:textSize="30sp"
         android:text="Back" />

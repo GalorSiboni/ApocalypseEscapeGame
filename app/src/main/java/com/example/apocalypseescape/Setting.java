@@ -14,6 +14,9 @@ public class Setting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         Button backToMenu = findViewById(R.id.backMain);
+        Button slow = findViewById(R.id.Slow);
+        Button fast = findViewById(R.id.Fast);
+        Button sensor = findViewById(R.id.Sensor);
         backToMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -22,5 +25,31 @@ public class Setting extends AppCompatActivity {
                 finish();
             }
         });
-    }
+        slow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), MainActivity.class);
+                intent.putExtra("speed", "slow");
+                view.getContext().startActivity(intent);
+                finish();
+            }
+        });
+        fast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), MainActivity.class);
+                intent.putExtra("speed", "fast");
+                view.getContext().startActivity(intent);
+                finish();
+            }
+        });
+        sensor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), MainActivity.class);
+                    view.getContext().startActivity(intent);
+                    finish();
+                }
+            });
+        }
 }
