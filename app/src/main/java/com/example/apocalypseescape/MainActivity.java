@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Class
     private Handler handler = new Handler();
     private Timer timer;
+    private SoundPlayer sound;
 
     //Score, Distance,Speed and Lifes
     private TextView scoreLable, disLable;
@@ -57,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sound = new SoundPlayer(this);
+
         Car = findViewById(R.id.Car);
         Coin = findViewById(R.id.Coin);
         Zombie = findViewById(R.id.Zombie);
@@ -93,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         lifeNum = 3;
         score = 0;
-        Thread scoreCounter = new Thread(){
+        Thread odometer = new Thread(){
             @Override
             public void run(){
                 while(!isInterrupted()){
@@ -103,10 +107,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                score++;
+//                                score++;
                                 distance += zombieAndCoinSpeed;
                                 disLable.setText("Distance : " + distance + " M");
-                                scoreLable.setText("Score : " + score);
+//                                scoreLable.setText("Score : " + score);
                             }
                         });
                     } catch (Exception e) {
@@ -115,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         };
-        scoreCounter.start();
+        odometer.start();
         rand = new Random();
         timer = new Timer();
 
@@ -190,6 +194,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Zombie2.setVisibility(View.INVISIBLE);
                 Zombie3.setVisibility(View.INVISIBLE);
                 Zombie4.setVisibility(View.INVISIBLE);
+                Coin.setVisibility(View.INVISIBLE);
+                sound.playGameOverSound();
                 gameOver();
                 timer.cancel();
                 finish();
@@ -232,17 +238,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (hitCheck(zombieX, zombieY) || hitCheck(zombie2X, zombieY) || hitCheck(zombie3X, zombieY)|| hitCheck(zombie4X, zombieY)){
             lifeNum--;
             vibe();
+            sound.playHitSound();
            // explosionField.explode(Car);
-            Zombie.setY(-200);
-            Zombie2.setY(-200);
-            Zombie3.setY(-200);
-            Zombie4.setY(-200);
-            Coin.setY(-200);
+            Zombie.setY(-400);
+            Zombie2.setY(-400);
+            Zombie3.setY(-400);
+            Zombie4.setY(-400);
+            Coin.setY(-400);
             updateLife(lifeNum);
         }
-        if(carX == (coinX - 30) && Car.getY() - 80 <= zombieY){
+        if(carX == (coinX - 30) && Car.getY() + 15 <= zombieY){
           //  explosionField.explode(Coin);
-            score += 5;
+            if(zombieY % 30 == 0) {
+                score += 5;
+                sound.playCoinSound();
+            }
+            scoreLable.setText("Score : " + score);
             Zombie.setY(-200);
             Zombie2.setY(-200);
             Zombie3.setY(-200);

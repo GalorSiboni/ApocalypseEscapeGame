@@ -79,5 +79,6 @@ public class TopRanking extends AppCompatActivity {
         FirstPlace.setText("1st Place: " + firstPlace);
         SecondPlace.setText("2nd Place : " + secondPlace);
         ThirdPlace.setText("3rd Place : " + thirdPlace);
+        score = 0;
     }
 }
