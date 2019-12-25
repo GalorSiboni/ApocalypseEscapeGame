@@ -20,7 +20,7 @@ public class SoundPlayer {
 
     public void playHitSound(){
         //play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
-        soundPool.play(hitSound,1.0f, 1.0f,1,0,1.0f);
+        soundPool.play(hitSound,1.0f/8, 1.0f/8,1,0,1.0f);
     }
     public void playGameOverSound(){
         //play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
@@ -28,6 +28,6 @@ public class SoundPlayer {
     }
     public void playCoinSound(){
         //play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
-        soundPool.play(coinSound,1.0f, 1.0f,1,0,1.0f);
+        soundPool.play(coinSound,1.0f/8, 1.0f/8,1,0,1.0f);
     }
 }

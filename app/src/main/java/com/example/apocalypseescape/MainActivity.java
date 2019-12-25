@@ -2,6 +2,7 @@ package com.example.apocalypseescape;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,9 +20,14 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 import tyrantgit.explosionfield.ExplosionField;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,SensorEventListener {
 
     private Random rand;
     List<Integer> laneOptions = new ArrayList<>();
@@ -28,12 +35,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Vibrator vibrator;
 
     //Image
-    private ImageView Car, Zombie,Zombie2,Zombie3,Zombie4,Coin,life0,life1,life2;
+    private ImageView Car, Car2, Car3, Zombie,Zombie2,Zombie3,Zombie4,Coin,life0,life1,life2;
+    private ImageButton Left,Right;
 
     //Position
-    private float zombieY, coinY;
+    private float zombieY;
     private int zombieX, zombie2X, zombie3X, zombie4X,  coinX, zombieAndCoinSpeed;
     private float carX;
+    private boolean visibilityFlag;
+
+    //sensor
+    private SensorManager sensorManager;
+    private String sensorModeStr;
+    Sensor accelo;
+
 
     //Class
     private Handler handler = new Handler();
@@ -42,15 +57,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Score, Distance,Speed and Lifes
     private TextView scoreLable, disLable;
-    private int lifeNum, score, distance = 0;
+    private int lifeNum, score, distance = 0, hit_resize = 25;
     private String speed;
+
 
     ExplosionField explosionField;
 
-    //Status
+    //flags
     private boolean start_flg = false;
     private boolean action_left_flg = false;
     private boolean action_right_flg = false;
+    private boolean sensorMode = false;
 
 
 
@@ -62,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sound = new SoundPlayer(this);
 
         Car = findViewById(R.id.Car);
+        Car2 = findViewById(R.id.Car2);
+        Car3 = findViewById(R.id.Car3);
         Coin = findViewById(R.id.Coin);
         Zombie = findViewById(R.id.Zombie);
         Zombie2 = findViewById(R.id.Zombie2);
@@ -73,9 +92,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         life1 = findViewById(R.id.life1);
         life2 = findViewById(R.id.life2);
         explosionField = ExplosionField.attach2Window(this);
-        findViewById(R.id.Left).setOnClickListener(this);
-        findViewById(R.id.Right).setOnClickListener(this);
+        Left = findViewById(R.id.Left);
+        Left.setOnClickListener(this);
+        Right = findViewById(R.id.Right);
+        Right.setOnClickListener(this);
 
+
+        sensorManager=(SensorManager)getSystemService(Context.SENSOR_SERVICE);
+
+        accelo = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(MainActivity.this,accelo,SensorManager.SENSOR_DELAY_NORMAL);
+
+        Car2.setVisibility(View.INVISIBLE);
+        Car3.setVisibility(View.INVISIBLE);
         start_flg = true;
         laneOptions.add(0);
         laneOptions.add(290);
@@ -88,12 +117,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Car.setX(carX);
 
 
+
         String slowSpeed = "slow";
         Intent speedIntent = getIntent();
         speed = speedIntent.getStringExtra("speed");
         if(speed != null && speed.equals(slowSpeed))
-            zombieAndCoinSpeed = 15;
-        else zombieAndCoinSpeed = 30;
+            zombieAndCoinSpeed = 10;
+        else zombieAndCoinSpeed = 20;
+
+        String senMode = "on";
+        Intent sensorIntent = getIntent();
+        sensorModeStr = sensorIntent.getStringExtra("sensor");
+        if(sensorModeStr != null && sensorModeStr.equals(senMode)) {
+            sensorMode = true;
+            Left.setVisibility(View.GONE);
+            Right.setVisibility(View.GONE);
+        }
+        else sensorMode = false;
+
 
         lifeNum = 3;
         score = 0;
@@ -107,10 +148,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-//                                score++;
                                 distance += zombieAndCoinSpeed;
                                 disLable.setText("Distance : " + distance + " M");
-//                                scoreLable.setText("Score : " + score);
                             }
                         });
                     } catch (Exception e) {
@@ -122,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         odometer.start();
         rand = new Random();
         timer = new Timer();
+        swapVisibility();
+
 
 
         //Car movement
@@ -155,14 +196,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public boolean hitCheck(float x, float y){
-        return carX == x && Car.getY() + 20 <= y;
+        return carX == x && Car.getY() + hit_resize <= y;
     }
 
     public void changePos() {
 
         //Move Car
         if (action_right_flg) {
-            carX += 290;
+            if(carX < 1160) {
+                carX += 290;
+            }
             action_right_flg = false;
         }
         if (action_left_flg){
@@ -183,18 +226,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (lifeNum){
             case 3:
             case 2:
+                sound.playHitSound();
                 life0.setVisibility(View.INVISIBLE);
                 break;
             case 1:
+                sound.playHitSound();
                 life1.setVisibility(View.INVISIBLE);
                 break;
             case 0:
                 life2.setVisibility(View.INVISIBLE);
-                Zombie.setVisibility(View.INVISIBLE);
-                Zombie2.setVisibility(View.INVISIBLE);
-                Zombie3.setVisibility(View.INVISIBLE);
-                Zombie4.setVisibility(View.INVISIBLE);
-                Coin.setVisibility(View.INVISIBLE);
+                swapVisibility();
                 sound.playGameOverSound();
                 gameOver();
                 timer.cancel();
@@ -207,12 +248,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent scoreIntent = new Intent(MainActivity.this, GameOver.class);
         String scoreStr = String.valueOf(score);
         scoreIntent.putExtra("key", scoreStr);
+        scoreIntent.putExtra("mode",sensorMode);
         startActivity(scoreIntent);
     }
 
     public void zombieDrops() {
         zombieY += zombieAndCoinSpeed;
         if (zombieY > 2100) {
+            if (!visibilityFlag){
+                swapVisibility();
+            }
             zombieY = 0;
             zombieX = laneOptions.remove(rand.nextInt(laneOptions.size() - 1));
             zombie2X = laneOptions.remove(rand.nextInt(laneOptions.size() - 1));
@@ -238,30 +283,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (hitCheck(zombieX, zombieY) || hitCheck(zombie2X, zombieY) || hitCheck(zombie3X, zombieY)|| hitCheck(zombie4X, zombieY)){
             lifeNum--;
             vibe();
-            sound.playHitSound();
-           // explosionField.explode(Car);
+            if (lifeNum == 2){
+                Car2.setX(Car.getX());
+                Car2.setVisibility(View.VISIBLE);
+                Car.setVisibility(View.INVISIBLE);
+                explosionField.explode(Car2);
+                Car2.setImageBitmap(null);
+            }
+            else if (lifeNum == 1){
+                Car3.setX(Car.getX());
+                Car3.setVisibility(View.VISIBLE);
+                Car.setVisibility(View.INVISIBLE);
+                explosionField.explode(Car3);
+                Car3.setImageBitmap(null);
+            }
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Car.setVisibility(View.VISIBLE);
+                }
+            }, 400);
+
             Zombie.setY(-400);
             Zombie2.setY(-400);
             Zombie3.setY(-400);
             Zombie4.setY(-400);
             Coin.setY(-400);
             updateLife(lifeNum);
+
         }
-        if(carX == (coinX - 30) && Car.getY() + 15 <= zombieY){
-          //  explosionField.explode(Coin);
-            if(zombieY % 30 == 0) {
+        if (score == 100) hit_resize = 15;
+        if(carX == (coinX - 30) && Car.getY() + hit_resize <= zombieY){
+            if(zombieY % 20 == 0) {
                 score += 5;
+                if(score%100 == 0)zombieAndCoinSpeed += 10;
                 sound.playCoinSound();
             }
             scoreLable.setText("Score : " + score);
-            Zombie.setY(-200);
-            Zombie2.setY(-200);
-            Zombie3.setY(-200);
-            Zombie4.setY(-200);
-            Coin.setY(-200);
+            Zombie.setY(-400);
+            Zombie2.setY(-400);
+            Zombie3.setY(-400);
+            Zombie4.setY(-400);
+            Coin.setY(-400);
             }
-
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -288,4 +354,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             vibrator.vibrate(200);
         }
     }
+
+    public void swapVisibility(){
+        if(Zombie.getVisibility() == View.VISIBLE) {
+            Zombie.setVisibility(View.INVISIBLE);
+            Zombie2.setVisibility(View.INVISIBLE);
+            Zombie3.setVisibility(View.INVISIBLE);
+            Zombie4.setVisibility(View.INVISIBLE);
+            Coin.setVisibility(View.INVISIBLE);
+            visibilityFlag = false;
+        }
+        else {
+            Zombie.setVisibility(View.VISIBLE);
+            Zombie2.setVisibility(View.VISIBLE);
+            Zombie3.setVisibility(View.VISIBLE);
+            Zombie4.setVisibility(View.VISIBLE);
+            Coin.setVisibility(View.VISIBLE);
+            visibilityFlag = true;
+        }
+
     }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (sensorMode) {
+            if (event.values[0] > 3)
+                action_left_flg = true;
+            else if (event.values[0] < -3)
+                action_right_flg = true;
+            else {
+                action_left_flg = false;
+                action_right_flg = false;
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+    public void onResume() {
+        start_flg = true;
+        super.onResume();
+    }
+
+    public void onPause() {
+        start_flg = false;
+        super.onPause();
+    }
+}
+

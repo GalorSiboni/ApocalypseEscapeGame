@@ -47,6 +47,7 @@ public class Setting extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), MainActivity.class);
+                    intent.putExtra("sensor", "on");
                     view.getContext().startActivity(intent);
                     finish();
                 }

@@ -53,6 +53,20 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="5dp"
             android:src="@drawable/car" />
+        <ImageView
+            android:id="@+id/Car2"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/car" />
+        <ImageView
+            android:id="@+id/Car3"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/car" />
 
         <ImageView
             android:id="@+id/Zombie"
