@@ -19,7 +19,7 @@ public class MainMenu extends AppCompatActivity {
         topRanking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), TopRanking.class);
+                Intent intent = new Intent(view.getContext(), TopRank.class);
                 view.getContext().startActivity(intent);
                 finish();
             }

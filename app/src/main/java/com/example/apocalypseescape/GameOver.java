@@ -19,6 +19,7 @@ public class GameOver extends AppCompatActivity {
 
 
     int lastScore, lastPlace;
+    double longitude, latitude;
     boolean mode;
 
     @Override
@@ -26,8 +27,11 @@ public class GameOver extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
 
+
         Intent startingIntent = getIntent();
         score = startingIntent.getStringExtra("key");
+        latitude = startingIntent.getDoubleExtra("latitude", 0.0);
+        longitude = startingIntent.getDoubleExtra("longitude", 0.0);
         mode = startingIntent.getBooleanExtra("mode",false);
         TextView scoreLable = (TextView) findViewById(R.id.scoreLabel);
         scoreLable.setText("Score : " + score);
@@ -41,6 +45,8 @@ public class GameOver extends AppCompatActivity {
         if(lastPlace < lastScore){
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("lastScore", lastScore);
+            editor.putLong("lastLat", Double.doubleToLongBits(latitude));
+            editor.putLong("lastLon", Double.doubleToLongBits(longitude));
             setName();
             editor.apply();
         }
@@ -48,7 +54,7 @@ public class GameOver extends AppCompatActivity {
         topRanking.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), TopRanking.class);
+                    Intent intent = new Intent(view.getContext(), TopRank.class);
                     view.getContext().startActivity(intent);
                     finish();
                 }
@@ -103,5 +109,6 @@ public class GameOver extends AppCompatActivity {
 
             builder.show();
         }
+
 }
 

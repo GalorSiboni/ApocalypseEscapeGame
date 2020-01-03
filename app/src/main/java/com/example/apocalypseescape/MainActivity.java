@@ -1,9 +1,15 @@
 package com.example.apocalypseescape;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     List<Integer> laneOptions = new ArrayList<>();
 
     Vibrator vibrator;
+    private BroadcastReceiver broadcastReceiver;
+
 
     //Image
     private ImageView Car, Car2, Car3, Zombie,Zombie2,Zombie3,Zombie4,Coin,life0,life1,life2;
@@ -58,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Score, Distance,Speed and Lifes
     private TextView scoreLable, disLable;
     private int lifeNum, score, distance = 0, hit_resize = 25;
+    private double latitude, longitude;
     private String speed;
 
 
@@ -68,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean action_left_flg = false;
     private boolean action_right_flg = false;
     private boolean sensorMode = false;
-
 
 
     @Override
@@ -106,6 +114,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Car2.setVisibility(View.INVISIBLE);
         Car3.setVisibility(View.INVISIBLE);
         start_flg = true;
+        startGpsService();
+        if (broadcastReceiver == null) {
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+                    latitude = (double) intent.getExtras().get("latitude");
+                    longitude = (double) intent.getExtras().get("longitude");
+
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver, new IntentFilter("location_update"));
         laneOptions.add(0);
         laneOptions.add(290);
         laneOptions.add(580);
@@ -249,6 +270,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String scoreStr = String.valueOf(score);
         scoreIntent.putExtra("key", scoreStr);
         scoreIntent.putExtra("mode",sensorMode);
+        scoreIntent.putExtra("latitude", latitude);
+        scoreIntent.putExtra("longitude", longitude);
         startActivity(scoreIntent);
     }
 
@@ -393,14 +416,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
     public void onResume() {
         start_flg = true;
         super.onResume();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver);
+        }
     }
 
     public void onPause() {
         start_flg = false;
         super.onPause();
+    }
+
+    private void startGpsService() {
+        if (!runtime_permissions()) {
+            Intent i = new Intent(getApplicationContext(), GPS_service.class);
+            startService(i);
+        }
+
+    }
+
+    private boolean runtime_permissions() {
+        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                startGpsService();
+            } else {
+                runtime_permissions();
+            }
+        }
     }
 }
 
