@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -69,12 +70,30 @@ public class TopRank extends FragmentActivity implements OnMapReadyCallback {
                    break;
             }
         }
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations[0], 18.0f));
+        TextView First = findViewById(R.id.FirstPlace);
+First.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+                  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations[0], 18.0f));
 
     }
+});   TextView Second = findViewById(R.id.SecondPlace);
+Second.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+                  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations[1], 18.0f));
 
-//            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations[position], 18.0f));
+    }
+});   TextView Third = findViewById(R.id.ThirdPlace);
+Third.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+                  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations[2], 18.0f));
+
+    }
+});
+    }
 
 
     double getDouble(final SharedPreferences prefs, final String key, final double defaultValue)
