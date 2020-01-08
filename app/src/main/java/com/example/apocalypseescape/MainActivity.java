@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
             }
-        }, 0, 150);
+        }, 0, 100);
 
         //Zombie movement
         timer.schedule(new TimerTask() {
