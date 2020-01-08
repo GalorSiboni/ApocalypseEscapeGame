@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
             }
-        }, 0, 20);
+        }, 0, 150);
 
         //Zombie movement
         timer.schedule(new TimerTask() {
@@ -230,17 +230,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             action_right_flg = false;
         }
         if (action_left_flg){
-            carX -= 290;
+            if(carX > 0)
+                carX -= 290;
             action_left_flg = false;
         }
 
         // Check car position
         if(carX < 0){
-            carX = 0;
+            Car.setX(0);
         }
 
         Car.setX(carX);
-        if (carX > 1160) Car.setX(1160);
+        if (carX > 1160) {
+            Car.setX(1160);
+        }
     }
 
     private void updateLife(int lifeNum) {
@@ -420,6 +423,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onResume() {
         start_flg = true;
         super.onResume();
+
 
     }
 
