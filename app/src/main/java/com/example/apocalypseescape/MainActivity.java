@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int zombieX, zombie2X, zombie3X, zombie4X,  coinX, zombieAndCoinSpeed;
     private float carX;
     private boolean visibilityFlag;
+    private long posPeriod = 20;
 
     //sensor
     private SensorManager sensorManager;
@@ -151,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sensorModeStr = sensorIntent.getStringExtra("sensor");
         if(sensorModeStr != null && sensorModeStr.equals(senMode)) {
             sensorMode = true;
+            posPeriod = 170;
             Left.setVisibility(View.GONE);
             Right.setVisibility(View.GONE);
         }
@@ -198,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
             }
-        }, 0, 100);
+        }, 0, posPeriod);
 
         //Zombie movement
         timer.schedule(new TimerTask() {
