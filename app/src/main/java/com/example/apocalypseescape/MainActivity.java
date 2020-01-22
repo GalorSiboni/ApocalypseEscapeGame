@@ -10,11 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.Display;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Score, Distance,Speed and Lifes
     private TextView scoreLable, disLable;
-    private int lifeNum, score, distance = 0, hit_resize = 25;
+    private int lifeNum, score, distance = 0, hit_resize = 25, width, height;
     private double latitude, longitude;
     private String speed;
 
@@ -86,7 +88,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         sound = new SoundPlayer(this);
-
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
         Car = findViewById(R.id.Car);
         Car2 = findViewById(R.id.Car2);
         Car3 = findViewById(R.id.Car3);
@@ -129,10 +135,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         registerReceiver(broadcastReceiver, new IntentFilter("location_update"));
         laneOptions.add(0);
-        laneOptions.add(290);
-        laneOptions.add(580);
-        laneOptions.add(870);
-        laneOptions.add(1160);
+        laneOptions.add(width/5);
+        laneOptions.add((width/5)*2);
+        laneOptions.add((width/5)*3);
+        laneOptions.add((width/5)*4);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         carX =  laneOptions.get(2);
         zombieY = Zombie.getY();
@@ -226,14 +232,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Move Car
         if (action_right_flg) {
-            if(carX < 1160) {
-                carX += 290;
+            if(carX < (width/5)*4) {
+                carX += width/5;
             }
             action_right_flg = false;
         }
         if (action_left_flg){
             if(carX > 0)
-                carX -= 290;
+                carX -= width/5;
             action_left_flg = false;
         }
 
@@ -243,8 +249,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         Car.setX(carX);
-        if (carX > 1160) {
-            Car.setX(1160);
+        if (carX > (width/5)*4) {
+            Car.setX((width/5)*4);
         }
     }
 
