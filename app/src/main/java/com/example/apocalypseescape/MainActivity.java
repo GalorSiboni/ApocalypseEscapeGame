@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             score += 5;
             if(score%100 == 0)zombieAndCoinSpeed += hight/200;
             sound.playCoinSound();
-            if (score == 400) hit_resize = 5;
+            if (score >= 300 && score<= 395) hit_resize = 5;
             scoreLable.setText("Score : " + score);
             Zombie.setY(-400);
             Zombie2.setY(-400);
