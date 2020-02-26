@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Score, Distance,Speed and Lifes
     private TextView scoreLable, disLable;
-    private int lifeNum, score, distance = 0, hit_resize = 25, width, height;
+    private int lifeNum, score, distance = 0, hit_resize = 35, width, hight;
     private double latitude, longitude;
     private String speed;
 
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Point size = new Point();
         display.getSize(size);
         width = size.x;
-        height = size.y;
+        hight = size.y;
         Car = findViewById(R.id.Car);
         Car2 = findViewById(R.id.Car2);
         Car3 = findViewById(R.id.Car3);
@@ -150,8 +150,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent speedIntent = getIntent();
         speed = speedIntent.getStringExtra("speed");
         if(speed != null && speed.equals(slowSpeed))
-            zombieAndCoinSpeed = 10;
-        else zombieAndCoinSpeed = 20;
+            zombieAndCoinSpeed = hight/200;
+        else zombieAndCoinSpeed = hight/100;
 
         String senMode = "on";
         Intent sensorIntent = getIntent();
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public boolean hitCheck(float x, float y){
-        return carX == x && Car.getY() + hit_resize <= y;
+        return carX == x && Car.getY() + hit_resize == y;
     }
 
     public void changePos() {
@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void zombieDrops() {
         zombieY += zombieAndCoinSpeed;
-        if (zombieY > 2100) {
+        if (zombieY >= hight) {
             if (!visibilityFlag){
                 swapVisibility();
             }
@@ -346,13 +346,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             updateLife(lifeNum);
 
         }
-        if (score == 100) hit_resize = 15;
-        if(carX == (coinX - 30) && Car.getY() + hit_resize <= zombieY){
-            if(zombieY % 20 == 0) {
-                score += 5;
-                if(score%100 == 0)zombieAndCoinSpeed += 10;
-                sound.playCoinSound();
-            }
+        if(carX == (coinX - 30) && Car.getY() + hit_resize == zombieY){
+            hit_resize = 15;
+            score += 5;
+            if(score%100 == 0)zombieAndCoinSpeed += hight/200;
+            sound.playCoinSound();
+            if (score == 400) hit_resize = 5;
             scoreLable.setText("Score : " + score);
             Zombie.setY(-400);
             Zombie2.setY(-400);

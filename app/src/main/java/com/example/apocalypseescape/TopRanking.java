@@ -162,7 +162,7 @@ public class TopRanking extends Fragment {
 
     private void passwordForReset(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Password:                                             ");
+        builder.setTitle("Password:                                            ");
 
         // Set up the input
         final EditText inputName = new EditText(getActivity());

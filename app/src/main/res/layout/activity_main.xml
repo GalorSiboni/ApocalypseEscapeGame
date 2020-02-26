@@ -1,147 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical"
-    android:background="@drawable/road"
-    android:layoutDirection="ltr">
-
-
-    <FrameLayout
-        android:id="@+id/dataFrame"
+    android:layout_width="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:background="@android:color/white"
-        android:layout_height="60dp">
+        android:layout_height="match_parent"
+        tools:context=".MainActivity"
+        android:orientation="vertical"
+        android:background="@drawable/road"
+        android:layoutDirection="ltr">
 
-        <TextView
-            android:id="@+id/scoreLabel"
+
+        <FrameLayout
+            android:id="@+id/dataFrame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:gravity="right"
-            android:paddingVertical="14dp"
-            android:paddingRight="55dp"
-            android:text="Score : 0"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/disLabel"
+            android:background="@android:color/white"
+            android:layout_height="60dp">
+
+            <TextView
+                android:id="@+id/scoreLabel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:gravity="right"
+                android:paddingVertical="14dp"
+                android:paddingRight="55dp"
+                android:text="Score : 0"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/disLabel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="distance : 0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingVertical="14dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="left"
+                android:paddingLeft="55dp"/>
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/gameFrame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="distance : 0"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:paddingVertical="14dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="left"
-            android:paddingLeft="55dp"/>
-    </FrameLayout>
-    <FrameLayout
-        android:id="@+id/gameFrame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_height="match_parent">
 
 
-        <ImageView
-            android:id="@+id/Car"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/car" />
-        <ImageView
-            android:id="@+id/Car2"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/car" />
-        <ImageView
-            android:id="@+id/Car3"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/car" />
+            <ImageView
+                android:id="@+id/Car"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/car" />
+            <ImageView
+                android:id="@+id/Car2"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/car" />
+            <ImageView
+                android:id="@+id/Car3"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/car" />
 
-        <ImageView
-            android:id="@+id/Zombie"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
-            android:background="@null"
-            android:src="@drawable/zombie" />
+            <ImageView
+                android:id="@+id/Zombie"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:background="@null"
+                android:src="@drawable/zombie" />
 
-        <ImageView
-            android:id="@+id/Zombie2"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
-            android:background="@null"
-            android:src="@drawable/zombie" />
+            <ImageView
+                android:id="@+id/Zombie2"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:background="@null"
+                android:src="@drawable/zombie" />
 
-        <ImageView
-            android:id="@+id/Zombie3"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
-            android:background="@null"
-            android:src="@drawable/zombie" />
+            <ImageView
+                android:id="@+id/Zombie3"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:background="@null"
+                android:src="@drawable/zombie" />
 
-        <ImageView
-            android:id="@+id/Zombie4"
-            android:layout_width="80dp"
-            android:layout_height="120dp"
-            android:background="@null"
-            android:src="@drawable/zombie" />
+            <ImageView
+                android:id="@+id/Zombie4"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:background="@null"
+                android:src="@drawable/zombie" />
 
-        <ImageView
-            android:id="@+id/Coin"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@null"
-            android:src="@drawable/coin" />
+            <ImageView
+                android:id="@+id/Coin"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@null"
+                android:src="@drawable/coin" />
 
-        <ImageView
-            android:id="@+id/life2"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_gravity="right"
-            android:src="@drawable/like" />
+            <ImageView
+                android:id="@+id/life2"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:src="@drawable/like" />
 
-        <ImageView
-            android:id="@+id/life0"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="120dp"
-            android:src="@drawable/like" />
+            <ImageView
+                android:id="@+id/life0"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="120dp"
+                android:src="@drawable/like" />
 
-        <ImageView
-            android:id="@+id/life1"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="60dp"
-            android:src="@drawable/like" />
+            <ImageView
+                android:id="@+id/life1"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="60dp"
+                android:src="@drawable/like" />
 
-        <ImageButton
-            android:id="@+id/Left"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/left" />
+            <ImageButton
+                android:id="@+id/Left"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/left" />
 
-        <ImageButton
-            android:id="@+id/Right"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="325dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/right" />
-    </FrameLayout>
-</LinearLayout>
+            <ImageButton
+                android:id="@+id/Right"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="325dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/right" />
+        </FrameLayout>
+    </LinearLayout>
+</RelativeLayout>

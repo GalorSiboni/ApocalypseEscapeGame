@@ -1,6 +1,5 @@
 package com.example.apocalypseescape;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.SharedPreferences;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
